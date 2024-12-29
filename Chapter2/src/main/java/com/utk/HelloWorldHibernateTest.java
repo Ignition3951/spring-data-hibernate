@@ -27,7 +27,7 @@ public class HelloWorldHibernateTest {
 	}
 
 	public static void storeLoadMessage() {
-		try (SessionFactory sessionFactory = createSessionFactory(); Session session = sessionFactory.openSession()) {
+		try (SessionFactory sessionFactory = createSessionFactory(); Session session = sessionFactory.openSession();) {
 			session.beginTransaction();
 
 			Message message = new Message();
