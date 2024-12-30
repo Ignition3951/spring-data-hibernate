@@ -54,5 +54,6 @@
 
 	<modules>
 		<module>Chapter2</module>
+		<module>HibChapter3</module>
 	</modules>
 </project>
