@@ -22,4 +22,11 @@ public class Message {
 		this.text = text;
 	}
 
+	public Message(String text) {
+		this.text = text;
+	}
+
+	public Message() {
+	}
+
 }
