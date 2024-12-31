@@ -19,12 +19,26 @@ public class User {
 
 	private LocalDate registrationDate;
 
+	private String email;
+
+	private int level;
+
+	private boolean isActive;
+
 	public User() {
 	}
 
 	public User(String username, LocalDate registrationDate) {
 		this.username = username;
 		this.registrationDate = registrationDate;
+	}
+
+	public User(String username, LocalDate registrationDate, String email, int level, boolean isActive) {
+		this.username = username;
+		this.registrationDate = registrationDate;
+		this.email = email;
+		this.level = level;
+		this.isActive = isActive;
 	}
 
 	public String getUsername() {
@@ -47,9 +61,34 @@ public class User {
 		return id;
 	}
 
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", registrationDate=" + registrationDate + "]";
+		return "User [id=" + id + ", username=" + username + ", registrationDate=" + registrationDate + ", email="
+				+ email + ", level=" + level + ", isActive=" + isActive + "]";
 	}
 
 }
