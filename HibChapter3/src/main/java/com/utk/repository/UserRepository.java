@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.util.Streamable;
@@ -67,7 +68,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	int findNumberOfUsersbyActivity(boolean isActive);
 
 	@Query("select u from User u where u.level = :level and u.isActive = :isActive")
-	List<User> findByLevelAndActive(@Param("level") int level, @Param("active") boolean isActive);
+	List<User> findByLevelAndActive(@Param("level") int level, @Param("isActive") boolean isActive);
 
 	@Query(value = "select count(*) from users where is_active = ?1", nativeQuery = true)
 	int findNumberOfUsersByActivityNative(boolean isActive);
@@ -80,5 +81,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	List<Projection.UsernameOnly> findByEmail(String username);
 
 	<T> List<T> findByEmail(String username, Class<T> type);
+
+	@Modifying
+	@org.springframework.transaction.annotation.Transactional
+	@Query("update User u set u.level = :newLevel where u.level = :oldlevel")
+	int updateLevel(@Param("oldlevel") int oldLevel, @Param("newLevel") int newLevel);
+
+	@org.springframework.transaction.annotation.Transactional
+	int deleteByLevel(int level);
+
+	@org.springframework.transaction.annotation.Transactional
+	@Modifying
+	@Query("delete from User u where u.level=:levelToBeDeleted")
+	int deleteBulkByLevel(@Param("levelToBeDeleted") int level);
 
 }
