@@ -29,5 +29,10 @@
 			<artifactId>HibChapter5</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		<dependency>
+			<groupId>com.utk</groupId>
+			<artifactId>HibChapter3</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

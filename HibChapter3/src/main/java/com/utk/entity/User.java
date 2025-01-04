@@ -5,10 +5,13 @@ import java.time.LocalDate;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "USERS")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class User {
 
 	@Id
