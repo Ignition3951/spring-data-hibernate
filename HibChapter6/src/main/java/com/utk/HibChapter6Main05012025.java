@@ -1,5 +1,7 @@
 package com.utk;
 
+import java.math.BigDecimal;
+import java.util.Currency;
 import java.util.List;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,6 +10,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import com.utk.config.SpringDataConfigChapter6;
 import com.utk.entity.Address;
 import com.utk.entity.ItemChapter6;
+import com.utk.entity.MonetaryAmount;
 import com.utk.entity.UserChapter6;
 import com.utk.repo.ItemRepoChapter6;
 import com.utk.repo.UserRepoChapter6;
@@ -42,6 +45,7 @@ public class HibChapter6Main05012025 {
 		item.setMetricWeight(2);
 		item.setDescription("description");
 		item.setAuctionDate(Helper.tomorrow());
+		item.setBuyNowPrice(new MonetaryAmount(BigDecimal.valueOf(1.1), Currency.getInstance("USD")));
 		itemRepoChapter6.save(item);
 		List<UserChapter6> users = (List<UserChapter6>) userRepoChapter6.findAll();
 		List<ItemChapter6> items = (List<ItemChapter6>) itemRepoChapter6.findByMetricWeight(2.0);

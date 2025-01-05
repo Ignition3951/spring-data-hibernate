@@ -13,8 +13,11 @@ import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.utk.converter.MonetaryAmountConverter;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -51,6 +54,11 @@ public class ItemChapter6 extends Item {
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private AuctionType auctionType = AuctionType.HIGHEST_BID;
+
+	@NotNull
+	@Convert(converter = MonetaryAmountConverter.class)
+	@Column(name = "PRICE", length = 63)
+	private MonetaryAmount buyNowPrice;
 
 	public String getShortDescription() {
 		return shortDescription;
@@ -106,6 +114,14 @@ public class ItemChapter6 extends Item {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public MonetaryAmount getBuyNowPrice() {
+		return buyNowPrice;
+	}
+
+	public void setBuyNowPrice(MonetaryAmount buyNowPrice) {
+		this.buyNowPrice = buyNowPrice;
 	}
 
 }
