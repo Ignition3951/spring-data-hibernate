@@ -1,16 +1,12 @@
 package com.utk.config;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-public class SpringDataConfigChapter6 extends SpringDataConfig {
-
-	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-		LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = super.entityManagerFactory();
-		localContainerEntityManagerFactoryBean.setPackagesToScan("com.utk.entity");
-		return localContainerEntityManagerFactoryBean;
-	}
-
+@Configuration
+@Import(SpringDataConfig.class)
+@EnableJpaRepositories("com.utk.repo")
+public class SpringDataConfigChapter6 {
 
 }

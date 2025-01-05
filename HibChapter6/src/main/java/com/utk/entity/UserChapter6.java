@@ -33,4 +33,12 @@ public class UserChapter6 extends User {
 		this.billingAddress = billingAddress;
 	}
 
+	@Override
+	public String toString() {
+		return "UserChapter6 [homeAddress=" + homeAddress + ", billingAddress=" + billingAddress + ", getHomeAddress()="
+				+ getHomeAddress() + ", getBillingAddress()=" + getBillingAddress() + ", getUsername()=" + getUsername()
+				+ ", getRegistrationDate()=" + getRegistrationDate() + ", getId()=" + getId() + ", getEmail()="
+				+ getEmail() + ", getLevel()=" + getLevel() + ", isActive()=" + isActive() + ", toString()="
+				+ super.toString() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
+	}
 }

@@ -13,8 +13,6 @@ import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.Generated;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import jakarta.persistence.Access;
-import jakarta.persistence.AccessType;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,13 +23,7 @@ import jakarta.persistence.FetchType;
 @Entity
 public class ItemChapter6 extends Item {
 
-	@Access(AccessType.PROPERTY)
-	@Column(name = "ITEM_NAME")
-	private String name = getName();
-
-	@Override
-	public void setName(String name) {
-		this.name = !name.startsWith("AUCTION: ") ? "AUCTION: " + name : name;
+	public ItemChapter6() {
 	}
 
 	@NotNull
