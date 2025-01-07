@@ -1,12 +1,12 @@
 package com.utk.entity;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@AttributeOverride(name = "owner", column = @Column(name = "CC_OWNER", nullable = false))
+//@AttributeOverride(name = "owner", column = @Column(name = "CC_OWNER", nullable = false))
+@DiscriminatorValue("CC")
 public class CreditCard extends BillingDetails {
 
 	@NotNull

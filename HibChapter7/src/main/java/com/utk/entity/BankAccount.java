@@ -1,9 +1,11 @@
 package com.utk.entity;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
+@DiscriminatorValue("BA")
 public class BankAccount extends BillingDetails {
 
 	@NotNull
