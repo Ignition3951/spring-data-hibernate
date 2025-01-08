@@ -58,5 +58,6 @@
 		<module>HibChapter5</module>
 		<module>HibChapter6</module>
 		<module>HibChapter7</module>
+		<module>HibChapter8</module>
 	</modules>
 </project>
