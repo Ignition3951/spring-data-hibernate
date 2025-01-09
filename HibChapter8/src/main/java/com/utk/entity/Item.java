@@ -31,7 +31,6 @@ public class Item {
 	private Collection<String> images = new ArrayList<>();
 
 	public Item() {
-		super();
 	}
 
 	public Item(Set<String> images) {
