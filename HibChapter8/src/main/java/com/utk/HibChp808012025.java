@@ -10,6 +10,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Bean;
 
 import com.utk.config.HIbChapter8Config;
+import com.utk.entity.Image;
 import com.utk.entity.Item;
 import com.utk.repo.ItemRepository;
 
@@ -30,19 +31,12 @@ public class HibChp808012025 {
 			}
 			Item item = new Item();
 			item.setName("FOO");
-			item.add("background.jpg", "BACKGROUND");
-			item.add("foreground.jpg", "FOREGROUND");
-			item.add("landscape.jpg", "LANDSCAPE");
-			item.add("portrait.jpg", "PORTRAIT");
-
-			Item item1 = new Item();
-			item1.setName("BAR");
-			item1.add("portrait.jpg", "PORTRAIT");
-			item1.add("foreground.jpg", "FOREGROUND");
-
+			item.addImage(new Image("background.jpg", 640, 480));
+			item.addImage(new Image("foreground.jpg", 800, 600));
+			item.addImage(new Image("landscape.jpg", 1024, 768));
+			item.addImage(new Image("landscape.jpg", 1024, 768));
 
 			itemRepository.save(item);
-			itemRepository.save(item1);
 
 			Item item2 = itemRepository.findItemWithImages(item.getId());
 
@@ -52,8 +46,6 @@ public class HibChp808012025 {
 			System.out.println(" Size of Item1 : " + item2.getImages().size());
 			System.out.println("Size of items " + items.size());
 			System.out.println("Size of itemNative " + itemNative.size());
-			System.out.println("Check the first key of sorted map : " + item2.getImages().firstKey());
-//			System.out.println("Check for keys in map : "+item2.);
 
 		};
 	}

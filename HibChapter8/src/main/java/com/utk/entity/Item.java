@@ -1,20 +1,16 @@
 package com.utk.entity;
 
 import java.util.Collections;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.AttributeOverride;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.MapKeyColumn;
-
-import org.hibernate.annotations.SortComparator;
-
-import com.utk.util.ReverseStringComparator;
 
 @Entity
 public class Item {
@@ -27,15 +23,13 @@ public class Item {
 
 	@ElementCollection
 	@CollectionTable(name = "IMAGES")
-	@MapKeyColumn(name = "FILENAME")
-	@Column(name = "IMAGENAME")
-	@SortComparator(ReverseStringComparator.class)
-	private SortedMap<String, String> images = new TreeMap<>();
+	@AttributeOverride(column = @Column(name = "FNAME", nullable = false), name = "filename")
+	private Set<Image> images = new HashSet<>();
 
 	public Item() {
 	}
 
-	public Item(SortedMap<String, String> images) {
+	public Item(Set<Image> images) {
 		this.images = images;
 	}
 
@@ -43,16 +37,16 @@ public class Item {
 		return id;
 	}
 
-	public SortedMap<String, String> getImages() {
-		return Collections.unmodifiableSortedMap(images);
+	public Set<Image> getImages() {
+		return Collections.unmodifiableSet(images);
 	}
 
-	public void setImages(SortedMap<String, String> images) {
+	public void setImages(Set<Image> images) {
 		this.images = images;
 	}
 
-	public void add(String key, String value) {
-		images.put(key, value);
+	public void addImage(Image image) {
+		images.add(image);
 	}
 
 	public String getName() {

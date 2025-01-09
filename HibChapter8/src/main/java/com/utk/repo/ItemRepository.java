@@ -13,7 +13,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 	@Query("select i from Item i inner join fetch i.images where i.id = :idToSearch")
 	Item findItemWithImages(@Param("idToSearch") Long id);
 
-	@Query(value = "SELECT FILENAME FROM IMAGES WHERE ITEM_ID = ?1", nativeQuery = true)
+	@Query(value = "SELECT FNAME FROM IMAGES WHERE ITEM_ID = ?1", nativeQuery = true)
 	Set<String> findImagesNative(Long id);
 
 }
