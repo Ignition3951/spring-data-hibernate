@@ -1,7 +1,7 @@
 package com.utk.entity;
 
-import jakarta.persistence.MappedSuperclass;
-import jakarta.validation.constraints.NotNull;
+import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotNull;
 
 @MappedSuperclass
 public abstract class Measurement {

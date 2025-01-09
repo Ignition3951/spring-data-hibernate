@@ -1,16 +1,19 @@
 package com.utk.entity;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class Item {
@@ -22,7 +25,10 @@ public class Item {
 	@ElementCollection
 	@CollectionTable(name = "IMAGES", joinColumns = @JoinColumn(name = "ITEM_ID"))
 	@Column(name = "FILENAME")
-	private Set<String> images = new HashSet<>();
+	@GenericGenerator(name = "sequence_gen", strategy = "sequence")
+	@org.hibernate.annotations.CollectionId( // Surrogate PK allows duplicates!
+			columns = @Column(name = "IMAGE_ID"), type = @org.hibernate.annotations.Type(type = "long"), generator = "sequence_gen")
+	private Collection<String> images = new ArrayList<>();
 
 	public Item() {
 		super();
@@ -36,8 +42,8 @@ public class Item {
 		return id;
 	}
 
-	public Set<String> getImages() {
-		return Collections.unmodifiableSet(images);
+	public Collection<String> getImages() {
+		return Collections.unmodifiableCollection(images);
 	}
 
 	public void setImages(Set<String> images) {

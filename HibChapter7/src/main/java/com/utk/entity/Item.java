@@ -1,12 +1,12 @@
 package com.utk.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 
 @Entity
 public class Item {
 
-	@jakarta.persistence.Id
+	@javax.persistence.Id
 	@GeneratedValue(generator = "ID_GENERATOR")
 	private Long Id;
 

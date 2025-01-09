@@ -1,8 +1,8 @@
 package com.utk.entity;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 
 @Entity
 public class UserChapter6 extends User {

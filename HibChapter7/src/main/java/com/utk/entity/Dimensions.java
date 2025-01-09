@@ -2,10 +2,10 @@ package com.utk.entity;
 
 import java.math.BigDecimal;
 
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.validation.constraints.NotNull;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
 @Embeddable
 @AttributeOverride(name = "name", column = @Column(name = "DIMENSIONS_NAME"))

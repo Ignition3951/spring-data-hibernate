@@ -1,9 +1,9 @@
 package com.utk.converter;
 
-import com.utk.entity.MonetaryAmount;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
+import com.utk.entity.MonetaryAmount;
 
 @Converter
 public class MonetaryAmountConverter implements AttributeConverter<MonetaryAmount, String> {

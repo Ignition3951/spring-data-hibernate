@@ -29,6 +29,7 @@ public class HibChp808012025 {
 				System.out.println("NAME : " + name);
 			}
 			Item item = new Item();
+//			item.setName("FOO");
 			item.add("background.jpg");
 			item.add("foreground.jpg");
 			item.add("landscape.jpg");
@@ -36,7 +37,7 @@ public class HibChp808012025 {
 
 			itemRepository.save(item);
 
-			Item item1 = itemRepository.findItemWithImages("1000");
+			Item item1 = itemRepository.findItemWithImages(item.getId());
 
 			List<Item> items = itemRepository.findAll();
 			Set<String> itemNative = itemRepository.findImagesNative(item.getId());

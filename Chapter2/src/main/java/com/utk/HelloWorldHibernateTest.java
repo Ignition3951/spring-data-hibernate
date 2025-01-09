@@ -2,6 +2,8 @@ package com.utk;
 
 import java.util.List;
 
+import javax.persistence.criteria.CriteriaQuery;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -9,8 +11,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import com.utk.model.Message;
-
-import jakarta.persistence.criteria.CriteriaQuery;
 
 public class HelloWorldHibernateTest {
 
