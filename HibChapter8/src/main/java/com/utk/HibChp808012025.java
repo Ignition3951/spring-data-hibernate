@@ -52,6 +52,8 @@ public class HibChp808012025 {
 			System.out.println(" Size of Item1 : " + item2.getImages().size());
 			System.out.println("Size of items " + items.size());
 			System.out.println("Size of itemNative " + itemNative.size());
+			System.out.println("Check the first key of sorted map : " + item2.getImages().firstKey());
+//			System.out.println("Check for keys in map : "+item2.);
 
 		};
 	}

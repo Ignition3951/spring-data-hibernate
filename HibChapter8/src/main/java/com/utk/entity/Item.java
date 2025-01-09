@@ -1,8 +1,8 @@
 package com.utk.entity;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -11,6 +11,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MapKeyColumn;
+
+import org.hibernate.annotations.SortComparator;
+
+import com.utk.util.ReverseStringComparator;
 
 @Entity
 public class Item {
@@ -25,12 +29,13 @@ public class Item {
 	@CollectionTable(name = "IMAGES")
 	@MapKeyColumn(name = "FILENAME")
 	@Column(name = "IMAGENAME")
-	private Map<String, String> images = new HashMap<>();
+	@SortComparator(ReverseStringComparator.class)
+	private SortedMap<String, String> images = new TreeMap<>();
 
 	public Item() {
 	}
 
-	public Item(Map<String, String> images) {
+	public Item(SortedMap<String, String> images) {
 		this.images = images;
 	}
 
@@ -38,11 +43,11 @@ public class Item {
 		return id;
 	}
 
-	public Map<String, String> getImages() {
-		return Collections.unmodifiableMap(images);
+	public SortedMap<String, String> getImages() {
+		return Collections.unmodifiableSortedMap(images);
 	}
 
-	public void setImages(Map<String, String> images) {
+	public void setImages(SortedMap<String, String> images) {
 		this.images = images;
 	}
 
