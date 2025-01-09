@@ -30,15 +30,15 @@ public class HibChp808012025 {
 			}
 			Item item = new Item();
 			item.setName("FOO");
-			item.add("background.jpg");
-			item.add("foreground.jpg");
-			item.add("landscape.jpg");
-			item.add("portrait.jpg");
+			item.add("background.jpg", "BACKGROUND");
+			item.add("foreground.jpg", "FOREGROUND");
+			item.add("landscape.jpg", "LANDSCAPE");
+			item.add("portrait.jpg", "PORTRAIT");
 
 			Item item1 = new Item();
 			item1.setName("BAR");
-			item1.add("portrait.jpg");
-			item1.add("foreground.jpg");
+			item1.add("portrait.jpg", "PORTRAIT");
+			item1.add("foreground.jpg", "FOREGROUND");
 
 
 			itemRepository.save(item);

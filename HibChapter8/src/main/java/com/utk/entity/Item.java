@@ -1,9 +1,8 @@
 package com.utk.entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -11,7 +10,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OrderColumn;
+import javax.persistence.MapKeyColumn;
 
 @Entity
 public class Item {
@@ -24,14 +23,14 @@ public class Item {
 
 	@ElementCollection
 	@CollectionTable(name = "IMAGES")
-	@OrderColumn(name = "IMAGE_ID")
-	@Column(name = "FILENAME")
-	private List<String> images = new ArrayList<>();
+	@MapKeyColumn(name = "FILENAME")
+	@Column(name = "IMAGENAME")
+	private Map<String, String> images = new HashMap<>();
 
 	public Item() {
 	}
 
-	public Item(List<String> images) {
+	public Item(Map<String, String> images) {
 		this.images = images;
 	}
 
@@ -39,16 +38,16 @@ public class Item {
 		return id;
 	}
 
-	public Collection<String> getImages() {
-		return Collections.unmodifiableCollection(images);
+	public Map<String, String> getImages() {
+		return Collections.unmodifiableMap(images);
 	}
 
-	public void setImages(List<String> images) {
+	public void setImages(Map<String, String> images) {
 		this.images = images;
 	}
 
-	public void add(String imageName) {
-		images.add(imageName);
+	public void add(String key, String value) {
+		images.put(key, value);
 	}
 
 	public String getName() {
