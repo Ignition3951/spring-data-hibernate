@@ -3,7 +3,7 @@ package com.utk.entity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -11,9 +11,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-
-import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.OrderColumn;
 
 @Entity
 public class Item {
@@ -22,18 +20,18 @@ public class Item {
 	@GeneratedValue(generator = "ID_GENERATOR")
 	private Long id;
 
+	private String name;
+
 	@ElementCollection
-	@CollectionTable(name = "IMAGES", joinColumns = @JoinColumn(name = "ITEM_ID"))
+	@CollectionTable(name = "IMAGES")
+	@OrderColumn(name = "IMAGE_ID")
 	@Column(name = "FILENAME")
-	@GenericGenerator(name = "sequence_gen", strategy = "sequence")
-	@org.hibernate.annotations.CollectionId( // Surrogate PK allows duplicates!
-			columns = @Column(name = "IMAGE_ID"), type = @org.hibernate.annotations.Type(type = "long"), generator = "sequence_gen")
-	private Collection<String> images = new ArrayList<>();
+	private List<String> images = new ArrayList<>();
 
 	public Item() {
 	}
 
-	public Item(Set<String> images) {
+	public Item(List<String> images) {
 		this.images = images;
 	}
 
@@ -45,12 +43,20 @@ public class Item {
 		return Collections.unmodifiableCollection(images);
 	}
 
-	public void setImages(Set<String> images) {
+	public void setImages(List<String> images) {
 		this.images = images;
 	}
 
 	public void add(String imageName) {
 		images.add(imageName);
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 //	@Override

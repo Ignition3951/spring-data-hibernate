@@ -29,20 +29,27 @@ public class HibChp808012025 {
 				System.out.println("NAME : " + name);
 			}
 			Item item = new Item();
-//			item.setName("FOO");
+			item.setName("FOO");
 			item.add("background.jpg");
 			item.add("foreground.jpg");
 			item.add("landscape.jpg");
 			item.add("portrait.jpg");
 
-			itemRepository.save(item);
+			Item item1 = new Item();
+			item1.setName("BAR");
+			item1.add("portrait.jpg");
+			item1.add("foreground.jpg");
 
-			Item item1 = itemRepository.findItemWithImages(item.getId());
+
+			itemRepository.save(item);
+			itemRepository.save(item1);
+
+			Item item2 = itemRepository.findItemWithImages(item.getId());
 
 			List<Item> items = itemRepository.findAll();
 			Set<String> itemNative = itemRepository.findImagesNative(item.getId());
 
-			System.out.println(" Size of Item1 : " + item1.getImages().size());
+			System.out.println(" Size of Item1 : " + item2.getImages().size());
 			System.out.println("Size of items " + items.size());
 			System.out.println("Size of itemNative " + itemNative.size());
 
