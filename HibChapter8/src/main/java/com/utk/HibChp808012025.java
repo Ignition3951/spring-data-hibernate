@@ -14,7 +14,6 @@ import com.utk.config.HIbChapter8Config;
 import com.utk.entity.Bid;
 import com.utk.entity.Image;
 import com.utk.entity.Item;
-import com.utk.repo.BidRepository;
 import com.utk.repo.ItemRepository;
 
 @SpringBootApplication
@@ -25,7 +24,7 @@ public class HibChp808012025 {
 	}
 
 	@Bean
-	public ApplicationRunner configure(ItemRepository itemRepository, BidRepository bidRepository) {
+	public ApplicationRunner configure(ItemRepository itemRepository) {
 		return env -> {
 			AnnotationConfigApplicationContext configApplicationContext = new AnnotationConfigApplicationContext(
 					HIbChapter8Config.class);
@@ -38,6 +37,10 @@ public class HibChp808012025 {
 			item.addImage(new Image("foreground.jpg", 800, 600));
 			item.addImage(new Image("landscape.jpg", 1024, 768));
 			item.addImage(new Image("landscape.jpg", 1024, 768));
+			Bid bid1 = new Bid(item, BigDecimal.valueOf(1000));
+			Bid bid2 = new Bid(item, BigDecimal.valueOf(2000));
+			item.addBids(bid1);
+			item.addBids(bid2);
 
 			itemRepository.save(item);
 
@@ -49,15 +52,6 @@ public class HibChp808012025 {
 			System.out.println(" Size of Item1 : " + item2.getImages().size());
 			System.out.println("Size of items " + items.size());
 			System.out.println("Size of itemNative " + itemNative.size());
-
-			Bid bid1 = new Bid(item, BigDecimal.valueOf(1000));
-			Bid bid2 = new Bid(item, BigDecimal.valueOf(2000));
-
-			item.addBids(bid1);
-			item.addBids(bid2);
-
-			bidRepository.save(bid1);
-			bidRepository.save(bid2);
 
 		};
 	}

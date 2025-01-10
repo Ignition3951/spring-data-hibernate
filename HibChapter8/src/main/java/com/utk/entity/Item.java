@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.AttributeOverride;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -28,7 +29,7 @@ public class Item {
 	@AttributeOverride(column = @Column(name = "FNAME", nullable = false), name = "filename")
 	private Set<Image> images = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item", cascade = CascadeType.PERSIST)
 	private Set<Bid> bids = new HashSet<>();
 
 	public Item() {
