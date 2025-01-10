@@ -9,8 +9,10 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Item {
@@ -25,6 +27,9 @@ public class Item {
 	@CollectionTable(name = "IMAGES")
 	@AttributeOverride(column = @Column(name = "FNAME", nullable = false), name = "filename")
 	private Set<Image> images = new HashSet<>();
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
+	private Set<Bid> bids = new HashSet<>();
 
 	public Item() {
 	}
@@ -55,6 +60,10 @@ public class Item {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public void addBids(Bid bid) {
+		bids.add(bid);
 	}
 
 //	@Override
