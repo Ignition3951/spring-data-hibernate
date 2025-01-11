@@ -21,11 +21,14 @@ public class TestService {
 
 	@Transactional
 	public void storeLoadEntities() {
-		Address address = new Address("Flowers Street", "01246", "Boston");
-		addressRepository.save(address);
+//		Address address = new Address("Flowers Street", "01246", "Boston");
+//		addressRepository.save(address);
 
-		User john = new User(address.getId(), "JOhn Smith");
+		User john = new User();
+		john.setUsername("JOHN SMITH");
+		Address address = new Address("Flowers Street", "01246", "Boston", john);
 		john.setAddress(address);
+
 
 		userRepository.save(john);
 	}
