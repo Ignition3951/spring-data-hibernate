@@ -2,6 +2,8 @@ package com.utk.entity;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,6 +28,9 @@ public class Item {
 	@ManyToOne
 	@JoinTable(name = "ITEM_BUYER", joinColumns = @JoinColumn(name = "ITEM_ID"), inverseJoinColumns = @JoinColumn(name = "BUYER_ID", nullable = false))
 	private User buyer;
+
+	@OneToMany(mappedBy = "item")
+	private Set<CategorizedItem> categorizedItems = new HashSet<>();
 
 	public Item() {
 	}
@@ -58,6 +63,10 @@ public class Item {
 
 	public void addBids(Bid bid) {
 		bids.add(bid);
+	}
+
+	public void addCategorizedItems(CategorizedItem categorizedItem) {
+		categorizedItems.add(categorizedItem);
 	}
 
 }

@@ -9,11 +9,15 @@ import org.springframework.stereotype.Service;
 
 import com.utk.entity.Address;
 import com.utk.entity.Bid;
+import com.utk.entity.CategorizedItem;
+import com.utk.entity.Category;
 import com.utk.entity.Item;
 import com.utk.entity.Shipment;
 import com.utk.entity.User;
 import com.utk.repo.AddressRepository;
 import com.utk.repo.BidRepository;
+import com.utk.repo.CategorizedItemRepository;
+import com.utk.repo.CategoryRepository;
 import com.utk.repo.ItemRepository;
 import com.utk.repo.ShipmentRepo;
 import com.utk.repo.UserRepository;
@@ -35,6 +39,12 @@ public class TestService {
 
 	@Autowired
 	private BidRepository bidRepository;
+
+	@Autowired
+	private CategoryRepository categoryRepository;
+
+	@Autowired
+	private CategorizedItemRepository categorizedItemRepository;
 
 	@Transactional
 	public void storeLoadEntities() {
@@ -60,6 +70,21 @@ public class TestService {
 
 		Item buyedItem = new Item("BAR", john);
 		itemRepository.save(buyedItem);
+
+		Category someCategory = new Category("Some Category");
+		Category otherCategory = new Category("Other Category");
+		categoryRepository.save(someCategory);
+		categoryRepository.save(otherCategory);
+		Item someItem = new Item("Some Item");
+		Item otherItem = new Item("Other Item");
+		itemRepository.save(someItem);
+		itemRepository.save(otherItem);
+		CategorizedItem linkOne = new CategorizedItem("John Smith", someCategory, someItem);
+		CategorizedItem linkTwo = new CategorizedItem("John Smith", someCategory, otherItem);
+		CategorizedItem linkThree = new CategorizedItem("John Smith", otherCategory, otherItem);
+		categorizedItemRepository.save(linkOne);
+		categorizedItemRepository.save(linkTwo);
+		categorizedItemRepository.save(linkThree);
 //		john.addItems(buyedItem);
 
 		userRepository.save(john);
