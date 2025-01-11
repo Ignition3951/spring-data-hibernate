@@ -58,6 +58,10 @@ public class TestService {
 		item.addBids(bid);
 		bidRepository.save(bid);
 
+		Item buyedItem = new Item("BAR", john);
+		itemRepository.save(buyedItem);
+//		john.addItems(buyedItem);
+
 		userRepository.save(john);
 	}
 }

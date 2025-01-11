@@ -6,6 +6,9 @@ import java.util.Collection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -20,6 +23,10 @@ public class Item {
 	@OneToMany(mappedBy = "item")
 	private Collection<Bid> bids = new ArrayList<>();
 
+	@ManyToOne
+	@JoinTable(name = "ITEM_BUYER", joinColumns = @JoinColumn(name = "ITEM_ID"), inverseJoinColumns = @JoinColumn(name = "BUYER_ID", nullable = false))
+	private User buyer;
+
 	public Item() {
 	}
 
@@ -30,6 +37,11 @@ public class Item {
 	public Item(String name, Collection<Bid> bids) {
 		this.name = name;
 		this.bids = bids;
+	}
+
+	public Item(String name, User buyer) {
+		this.name = name;
+		this.buyer = buyer;
 	}
 
 	public Long getId() {
