@@ -26,7 +26,7 @@ public class TestService {
 
 		User john = new User();
 		john.setUsername("JOHN SMITH");
-		Address address = new Address("Flowers Street", "01246", "Boston", john);
+		Address address = new Address("Flowers Street", "01246", "Boston");
 		john.setAddress(address);
 
 
