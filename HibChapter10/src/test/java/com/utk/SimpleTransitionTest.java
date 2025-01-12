@@ -50,7 +50,8 @@ public class SimpleTransitionTest {
 		Long ITEM_ID = someItem.getId();
 
 		{
-			entityManager = entityManagerFactory.createEntityManager();
+			entityManager = entityManagerFactory.createEntityManager();// this returns the same persitence context and
+																		// hence the same object is returned
 			entityManager.getTransaction().begin();
 			Item item = entityManager.find(Item.class, ITEM_ID);
 			if (item != null)
@@ -79,6 +80,15 @@ public class SimpleTransitionTest {
 		entityManager.getTransaction().commit();
 		entityManager.close();
 
+	}
+
+
+	private EntityManagerFactory getDatabaseA() {
+		return entityManagerFactory;
+	}
+
+	private EntityManagerFactory getDatabaseB() {
+		return entityManagerFactoryReplicate;
 	}
 
 }
