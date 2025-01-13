@@ -2,10 +2,16 @@ package com.utk.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -27,6 +33,24 @@ public class Item {
 	private LocalDateTime auctionEnd;
 
 	private BigDecimal buyNowPrice;
+
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Users seller;
+
+	@OneToMany(mappedBy = "item")
+	private Set<Bid> bids = new HashSet<>();
+
+	public Item() {
+	}
+
+	public Item(
+			@NotNull @Size(min = 2, max = 255, message = "Please enter a string between 2 to 255 length") String name,
+			@Future LocalDateTime auctionEnd, @NotNull Users seller) {
+		this.name = name;
+		this.auctionEnd = auctionEnd;
+		this.seller = seller;
+	}
 
 
 	public String getName() {
@@ -55,6 +79,14 @@ public class Item {
 
 	public Long getId() {
 		return id;
+	}
+
+	public Set<Bid> getBids() {
+		return Collections.unmodifiableSet(bids);
+	}
+
+	public void addBids(Bid bid) {
+		bids.add(bid);
 	}
 
 }
