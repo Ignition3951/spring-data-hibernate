@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
@@ -333,6 +335,57 @@ public class SimpleTransitionTest {
 
 		em.getTransaction().commit(); // Flush!
 		em.close();
+	}
+
+	@Test
+	public void scopeOfIdentity() {
+		EntityManager em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+		Item someItem = new Item();
+		someItem.setName("Some Item");
+		em.persist(someItem);
+		em.getTransaction().commit();
+		em.close();
+		Long ITEM_ID = someItem.getId();
+
+		em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+
+		Item a = em.find(Item.class, ITEM_ID);
+		Item b = em.find(Item.class, ITEM_ID);
+		assertTrue(a == b);
+		assertTrue(a.equals(b));
+		assertEquals(a.getId(), b.getId());
+
+		em.getTransaction().commit();
+		em.close();
+		// Persistence Context is gone, 'a' and 'b' are now references to instances in
+		// detached state!
+
+		em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+
+		Item c = em.find(Item.class, ITEM_ID);
+		assertTrue(a != c); // The 'a' reference is still detached!
+		assertFalse(a.equals(c));
+		assertEquals(a.getId(), c.getId());
+
+		em.getTransaction().commit();
+		em.close();
+
+		/**
+		 * Whenever we work with instances in a detached state and test them for
+		 * equality (usually in hash-based collections), we need to supply our own
+		 * implementation of the equals() and hashCode() methods for our mapped entity
+		 * class.
+		 * 
+		 */
+		Set<Item> allItems = new HashSet<>();
+		allItems.add(a);
+		allItems.add(b);
+		allItems.add(c);
+		assertEquals(2, allItems.size()); // That seems wrong and arbitrary!
+
 	}
 
 
