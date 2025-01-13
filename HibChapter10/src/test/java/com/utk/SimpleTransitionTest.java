@@ -6,12 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnitUtil;
 
 import org.hibernate.LazyInitializationException;
+import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
 import com.utk.entity.Item;
@@ -216,6 +220,53 @@ public class SimpleTransitionTest {
 		assertNull(item);
 		em.getTransaction().commit();
 		em.close();
+	}
+
+	@Test
+	public void refresh() throws ExecutionException, InterruptedException {
+		EntityManager em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+		Item someItem = new Item();
+		someItem.setName("Refresh Item");
+		em.persist(someItem);
+		em.getTransaction().commit();
+		em.close();
+		Long ITEM_ID = someItem.getId();
+
+		em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+
+		Item item = em.find(Item.class, ITEM_ID);
+		item.setName("Refrresh Name");
+
+		// Someone updates this row in the database!
+		Executors.newSingleThreadExecutor().submit(() -> {
+			EntityManager em1 = entityManagerFactory.createEntityManager();
+			try {
+				em1.getTransaction().begin();
+
+				Session session = em1.unwrap(Session.class);
+				session.doWork(con -> {
+					Item item1 = em1.find(Item.class, ITEM_ID);
+					item1.setName("Concurrent Update Name");
+					em1.persist(item1);
+				});
+
+				em1.getTransaction().commit();
+				em1.close();
+
+			} catch (Exception ex) {
+				throw new RuntimeException("Concurrent operation failure: " + ex, ex);
+			}
+			return null;
+		}).get();
+
+		em.refresh(item);
+		em.getTransaction().commit(); // Flush: Dirty check and SQL UPDATE
+
+		em.refresh(item);
+		em.close();
+		assertEquals("Concurrent Update Name", item.getName());
 	}
 
 
