@@ -19,6 +19,9 @@ public class Users {
 
 	private Address homeAddress;
 
+	public Users() {
+	}
+
 	public Users(String username) {
 		this.username = username;
 	}
@@ -37,6 +40,10 @@ public class Users {
 
 	public void setHomeAddress(Address homeAddress) {
 		this.homeAddress = homeAddress;
+	}
+
+	public Long getId() {
+		return id;
 	}
 
 }

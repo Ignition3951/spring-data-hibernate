@@ -20,7 +20,9 @@ import org.hibernate.LazyInitializationException;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
+import com.utk.entity.Address;
 import com.utk.entity.Item;
+import com.utk.entity.Users;
 
 public class SimpleTransitionTest {
 
@@ -386,6 +388,71 @@ public class SimpleTransitionTest {
 		allItems.add(c);
 		assertEquals(2, allItems.size()); // That seems wrong and arbitrary!
 
+	}
+
+	@Test
+	public void detach() {
+		EntityManager em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+
+		Users someUser = new Users("johndoe");
+		Address address = new Address();
+		address.setCity("Some City");
+		address.setStreet("Some Street");
+		address.setZipcode("1234");
+		someUser.setHomeAddress(address);
+		em.persist(someUser);
+		em.getTransaction().commit();
+		em.close();
+		Long USER_ID = someUser.getId();
+
+		em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+
+		Users user = em.find(Users.class, USER_ID);
+		em.detach(user);
+		assertFalse(em.contains(user));
+
+		em.getTransaction().commit();
+		em.close();
+	}
+
+	@Test
+	public void mergeDetached() {
+		EntityManager em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+
+		Users detachedUser = new Users("johndoe");
+		Address address = new Address();
+		address.setCity("Some City");
+		address.setStreet("Some Street");
+		address.setZipcode("1234");
+		detachedUser.setHomeAddress(address);
+		em.persist(detachedUser);
+		em.getTransaction().commit();
+		em.close();
+		Long USER_ID = detachedUser.getId();
+
+		detachedUser.setUsername("johndoe");
+
+		em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+
+		Users mergedUser = em.merge(detachedUser);
+		// Discard 'detachedUser' reference after merging!
+
+		// The 'mergedUser' is in persistent state
+		mergedUser.setUsername("doejohn");
+
+		em.getTransaction().commit(); // UPDATE in database
+		em.close();
+
+		em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+		Users user = em.find(Users.class, USER_ID);
+		assertEquals(user.getUsername(), "doejohn");
+		em.getTransaction().commit();
+		em.close();
 	}
 
 
