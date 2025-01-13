@@ -269,6 +269,72 @@ public class SimpleTransitionTest {
 		assertEquals("Concurrent Update Name", item.getName());
 	}
 
+	@Test
+	public void replicate() {
+		Long ITEM_ID;
+		EntityManager em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+		Item someItem = new Item();
+		someItem.setName("Replicate Item");
+		em.persist(someItem);
+		em.getTransaction().commit();
+		em.close();
+		ITEM_ID = someItem.getId();
+
+		EntityManager emA = getDatabaseA().createEntityManager();
+		emA.getTransaction().begin();
+		Item item = emA.find(Item.class, ITEM_ID);
+		emA.getTransaction().commit();
+
+		EntityManager emB = getDatabaseB().createEntityManager();
+		emB.getTransaction().begin();
+		emB.unwrap(Session.class).replicate(item, org.hibernate.ReplicationMode.LATEST_VERSION);
+		Item item1 = emB.find(Item.class, ITEM_ID);
+		assertEquals("Replicate Item", item1.getName());
+		emB.getTransaction().commit();
+
+		emA.close();
+		emB.close();
+	}
+
+	@Test
+	public void flushModeType() {
+		EntityManager em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+		Item someItem = new Item();
+		someItem.setName("Original Name");
+		em.persist(someItem);
+		em.getTransaction().commit();
+		em.close();
+		Long ITEM_ID = someItem.getId();
+
+		em = entityManagerFactory.createEntityManager();
+		em.getTransaction().begin();
+
+		Item item = em.find(Item.class, ITEM_ID);
+		item.setName("New Name");
+
+		// Disable flushing before queries:
+		/**
+		 * With FlushModeType.COMMIT we disable flushing before queries, so we may see
+		 * different data returned by the query than what we have in memory. The
+		 * synchronization then occurs only when the transaction commits.
+		 * 
+		 */
+		em.setFlushMode(javax.persistence.FlushModeType.COMMIT);// Usually, Hibernate recognizes that data has changed
+																// in
+																// memory and synchronizes these modifications with the
+																// database before the
+																// query. We can control this behaviour by using
+																// setFlushMode()
+
+		assertEquals("Original Name", em.createQuery("select i.name from Item i where i.id = :id", String.class)
+				.setParameter("id", ITEM_ID).getSingleResult());
+
+		em.getTransaction().commit(); // Flush!
+		em.close();
+	}
+
 
 	private EntityManagerFactory getDatabaseA() {
 		return entityManagerFactory;
