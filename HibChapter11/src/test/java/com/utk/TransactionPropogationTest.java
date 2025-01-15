@@ -110,4 +110,25 @@ public class TransactionPropogationTest {
 		System.out.println("List of added items: ");
 		itemRepository.findAll().forEach(System.out::println);
 	}
+
+	/*
+	 * However, a log message is persisted in the logs even after the exception,
+	 * because the transaction was not rolled back. The addItemNoRollback method
+	 * from ItemRepository does not roll back for DuplicateItemNameException
+	 */
+	@Test
+	public void noRollback() {
+		itemRepository.addItemNoRollback("Item1", LocalDate.of(2022, 5, 1));
+		itemRepository.addItemNoRollback("Item2", LocalDate.of(2022, 3, 1));
+		itemRepository.addItemNoRollback("Item3", LocalDate.of(2022, 1, 1));
+		DuplicateItemNameException ex = assertThrows(DuplicateItemNameException.class,
+				() -> itemRepository.addItemNoRollback("Item2", LocalDate.of(2016, 3, 1)));
+		assertAll(() -> assertEquals("Item with name : Item2 already exists!!!!", ex.getMessage()),
+				() -> assertEquals(4, logRepository.findAll().size()),
+				() -> assertEquals(3, itemRepository.findAll().size()));
+		System.out.println("Logs: ");
+		logRepository.findAll().forEach(System.out::println);
+		System.out.println("List of added items: ");
+		itemRepository.findAll().forEach(System.out::println);
+	}
 }
