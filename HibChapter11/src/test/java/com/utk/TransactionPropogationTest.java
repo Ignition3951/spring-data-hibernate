@@ -15,6 +15,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.IllegalTransactionStateException;
 
 import com.utk.config.HibChapter11Config;
+import com.utk.exception.DuplicateItemNameException;
 import com.utk.repositories.ItemRepository;
 import com.utk.repositories.LogRepository;
 
@@ -87,5 +88,26 @@ public class TransactionPropogationTest {
 		IllegalTransactionStateException ex = assertThrows(IllegalTransactionStateException.class,
 				() -> itemRepository.showLogs());
 		assertEquals("Existing transaction found for transaction marked with propagation 'never'", ex.getMessage());
+	}
+
+	/*
+	 * Trying to insert a duplicate Item in the repository will throw a
+	 * DuplicateItemNameException However, a log message is persisted in the logs
+	 * even after exception, because it was added in a separate transaction.
+	 */
+	@Test
+	public void requiresNew() {
+		itemRepository.addItem("Item1", LocalDate.of(2022, 5, 1));
+		itemRepository.addItem("Item2", LocalDate.of(2022, 3, 1));
+		itemRepository.addItem("Item3", LocalDate.of(2022, 1, 1));
+		DuplicateItemNameException ex = assertThrows(DuplicateItemNameException.class,
+				() -> itemRepository.addItem("Item2", LocalDate.of(2016, 3, 1)));
+		assertAll(() -> assertEquals("Item with name : Item2 already exists!!!!", ex.getMessage()),
+				() -> assertEquals(4, logRepository.findAll().size()),
+				() -> assertEquals(3, itemRepository.findAll().size()));
+		System.out.println("Logs: ");
+		logRepository.findAll().forEach(System.out::println);
+		System.out.println("List of added items: ");
+		itemRepository.findAll().forEach(System.out::println);
 	}
 }
