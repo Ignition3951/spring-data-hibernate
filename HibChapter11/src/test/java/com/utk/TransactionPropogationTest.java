@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.IllegalTransactionStateException;
 
 import com.utk.config.HibChapter11Config;
 import com.utk.repositories.ItemRepository;
@@ -55,4 +56,21 @@ public class TransactionPropogationTest {
 				() -> assertEquals("Check from supported 1", logRepository.findAll().get(0).getMessage()));
 		logRepository.showLogs();
 	}
+
+	/*
+	 * The checkNameDuplicate method can be executed only in a transaction, so an
+	 * IllegalTransactionStateException will be thrown when calling it without a
+	 * transaction. We also check the message from the exception MANDATORY—If a
+	 * transaction is in progress, the execution will continue within that
+	 * transaction. Otherwise, a TransactionRequiredException exception will be
+	 * thrown
+	 */
+	@Test
+	 public void mandatory() {
+	 IllegalTransactionStateException ex = 
+	 assertThrows(IllegalTransactionStateException.class, 
+	 () -> itemRepository.checkNameDuplicate("Item1")); 
+		assertEquals("No existing transaction found for transaction marked with propagation 'mandatory'",
+				ex.getMessage());
+	 }
 }
