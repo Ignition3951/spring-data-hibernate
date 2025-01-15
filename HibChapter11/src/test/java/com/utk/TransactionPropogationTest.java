@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -66,11 +68,24 @@ public class TransactionPropogationTest {
 	 * thrown
 	 */
 	@Test
-	 public void mandatory() {
-	 IllegalTransactionStateException ex = 
-	 assertThrows(IllegalTransactionStateException.class, 
-	 () -> itemRepository.checkNameDuplicate("Item1")); 
+	public void mandatory() {
+		IllegalTransactionStateException ex = assertThrows(IllegalTransactionStateException.class,
+				() -> itemRepository.checkNameDuplicate("Item1"));
 		assertEquals("No existing transaction found for transaction marked with propagation 'mandatory'",
 				ex.getMessage());
-	 }
+	}
+
+	/*
+	 * However, we cannot call the showLogs method from LogRepository within a
+	 * transaction, as the calling method showLogs from ItemRepository is
+	 * transactional
+	 */
+	@Test
+	public void never() {
+		itemRepository.addItem("Item1", LocalDate.of(2022, 5, 1));
+		logRepository.showLogs();
+		IllegalTransactionStateException ex = assertThrows(IllegalTransactionStateException.class,
+				() -> itemRepository.showLogs());
+		assertEquals("Existing transaction found for transaction marked with propagation 'never'", ex.getMessage());
+	}
 }
