@@ -223,6 +223,7 @@ public class LazyProxyCollections {
 			Item item = em.getReference(Item.class, ITEM_ID);
 			User user = em.getReference(User.class, USER_ID);
 
+			// inserting the value of bid in table without loading any data from the table
 			Bid newBid = new Bid(new BigDecimal("99.00"));
 			newBid.setItem(item);
 			newBid.setBidder(user);
