@@ -17,7 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 @Entity
 public class Item {
@@ -94,7 +95,8 @@ public class Item {
 
 	@OneToMany(mappedBy = "item", fetch = FetchType.EAGER)
 //	@LazyCollection(LazyCollectionOption.EXTRA)
-	@BatchSize(size = 5)
+	// @BatchSize(size = 5)
+	@Fetch(FetchMode.SUBSELECT)
 	public Set<Bid> getBids() {
 		return bids;
 	}
