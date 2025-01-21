@@ -6,8 +6,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.BatchSize;
+
 @Entity
 @Table(name = "USERS")
+@BatchSize(size = 10)
 public class User {
 
 	private Long id;
