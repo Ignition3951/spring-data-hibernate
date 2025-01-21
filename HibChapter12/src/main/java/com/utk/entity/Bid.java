@@ -40,6 +40,11 @@ public class Bid {
 		this.amount = amount;
 	}
 
+	public Bid(@NotNull Item item, @NotNull BigDecimal amount) {
+		this.item = item;
+		this.amount = amount;
+	}
+
 	public Long getId() {
 		return id;
 	}
