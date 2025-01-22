@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.ExcludeDefaultListeners;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,12 +16,12 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
-import com.utk.listener.PersistEntityListener;
+import com.utk.interceptor.Auditable;
 
 @Entity
-@EntityListeners(PersistEntityListener.class)
-@ExcludeDefaultListeners
-public class Item {
+//@EntityListeners(PersistEntityListener.class)
+//@ExcludeDefaultListeners
+public class Item implements Auditable {
 
 	@Id
 	@GeneratedValue(generator = "ID_GENERATOR")
@@ -47,6 +45,11 @@ public class Item {
 	public Item(@NotNull String name, User seller) {
 		this.name = name;
 		this.seller = seller;
+	}
+
+	public Item(@NotNull String name) {
+		super();
+		this.name = name;
 	}
 
 	public String getName() {

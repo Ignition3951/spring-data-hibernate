@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.PostPersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -49,9 +48,9 @@ public class User {
 		return billingDetails;
 	}
 
-//	public void setBillingDetails(Set<BillingDetails> billingDetails) {
-//		this.billingDetails = billingDetails;
-//	}
+	public void setBillingDetails(Set<BillingDetails> billingDetails) {
+		this.billingDetails = billingDetails;
+	}
 
 	public void addBillingDetails(BillingDetails billingDetails) {
 		this.billingDetails.add(billingDetails);
@@ -61,11 +60,11 @@ public class User {
 		return id;
 	}
 
-	@PostPersist
-	public void logMessage() {
-		User currentUser = CurrentUser.INSTANCE.get();
-		Log log = Log.INSTANCE;
-		log.save("Entity instance persisted by " + currentUser.getUsername() + ": " + this);
-	}
+//	@PostPersist
+//	public void logMessage() {
+//		User currentUser = CurrentUser.INSTANCE.get();
+//		Log log = Log.INSTANCE;
+//		log.save("Entity instance persisted by " + currentUser.getUsername() + ": " + this);
+//	}
 
 }
