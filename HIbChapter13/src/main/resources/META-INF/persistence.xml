@@ -7,7 +7,7 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/x
 			<property name="javax.persistence.jdbc.driver"
 				value="com.mysql.cj.jdbc.Driver" />
 			<property name="javax.persistence.jdbc.url"
-				value="jdbc:mysql://localhost:3306/ch13_hibernate?sessionVariables=transaction_isolation='READ-COMMITTED'&amp;serverTimezone=UTC" />
+				value="jdbc:mysql://localhost:3306/ch13_hibernate?serverTimezone=UTC" />
 			<property name="javax.persistence.jdbc.user" value="root" />
 			<property name="javax.persistence.jdbc.password" value="root" />
 			<property name="hibernate.dialect"

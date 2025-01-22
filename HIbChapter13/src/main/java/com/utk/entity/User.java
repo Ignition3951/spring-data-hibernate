@@ -5,15 +5,18 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.ExcludeDefaultListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.PostPersist;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "USERS")
+@ExcludeDefaultListeners
 public class User {
 
 	@Id
@@ -56,6 +59,13 @@ public class User {
 
 	public Long getId() {
 		return id;
+	}
+
+	@PostPersist
+	public void logMessage() {
+		User currentUser = CurrentUser.INSTANCE.get();
+		Log log = Log.INSTANCE;
+		log.save("Entity instance persisted by " + currentUser.getUsername() + ": " + this);
 	}
 
 }
