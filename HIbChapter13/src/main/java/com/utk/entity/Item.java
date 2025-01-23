@@ -15,12 +15,15 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import com.utk.interceptor.Auditable;
 
 @Entity
 //@EntityListeners(PersistEntityListener.class)
 //@ExcludeDefaultListeners
+@Audited
 public class Item implements Auditable {
 
 	@Id
@@ -32,6 +35,7 @@ public class Item implements Auditable {
 
 	@OneToMany(mappedBy = "item", cascade = { javax.persistence.CascadeType.DETACH,
 			javax.persistence.CascadeType.MERGE })
+	@NotAudited
 	private Set<Bid> bids = new HashSet<>();
 
 	@ManyToOne(fetch = FetchType.LAZY)

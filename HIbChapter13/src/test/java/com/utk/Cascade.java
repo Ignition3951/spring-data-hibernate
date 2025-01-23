@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.math.BigDecimal;
-import java.sql.PreparedStatement;
-import java.util.concurrent.Executors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -15,10 +13,7 @@ import org.hibernate.ReplicationMode;
 import org.hibernate.Session;
 import org.junit.jupiter.api.Test;
 
-import com.utk.entity.BankAccount;
 import com.utk.entity.Bid;
-import com.utk.entity.BillingDetails;
-import com.utk.entity.CreditCard;
 import com.utk.entity.Item;
 import com.utk.entity.User;
 
@@ -107,110 +102,110 @@ public class Cascade {
 
 	}
 
-	@Test
-	public void refresh() throws Throwable {
-		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-
-		Long USER_ID;
-		Long CREDIT_CARD_ID = null;
-		{
-
-			User user = new User("johndoe");
-			user.addBillingDetails(new CreditCard("John Doe", "1234567890", "11", "2020"));
-			user.addBillingDetails(new BankAccount("John Doe", "45678", "Some Bank", "1234"));
-			em.persist(user);
-			em.flush();
-
-			USER_ID = user.getId();
-			for (BillingDetails bd : user.getBillingDetails()) {
-				if (bd instanceof CreditCard)
-					CREDIT_CARD_ID = bd.getId();
-			}
-			assertNotNull(CREDIT_CARD_ID);
-		}
-		em.getTransaction().commit();
-		em.close();
-		// Locks from INSERTs must be released, commit and start a new unit of work
-
-		em = emf.createEntityManager();
-		em.getTransaction().begin();
-
-		/*
-		 * An instance of <code>User</code> is loaded from the database.
-		 */
-		User user = em.find(User.class, USER_ID);
-
-		/*
-		 * Its lazy <code>billingDetails</code> collection is initialized when you
-		 * iterate through the elements or when you call <code>size()</code>.
-		 */
-		assertEquals(2, user.getBillingDetails().size());
-		for (BillingDetails bd : user.getBillingDetails()) {
-			assertEquals("John Doe", bd.getOwner());
-		}
-
-		// Someone modifies the billing information in the database!
-		Long SOME_USER_ID = USER_ID;
-		// In a separate transaction, so no locks are held in the database on the
-		// updated/deleted rows and we can SELECT them again in the original transaction
-		Executors.newSingleThreadExecutor().submit(() -> {
-
-			EntityManager em1 = emf.createEntityManager();
-			em1.getTransaction().begin();
-
-			em1.unwrap(Session.class).doWork(con -> {
-				PreparedStatement ps;
-
-				/*
-				 * Delete the credit card, this will cause the refresh to fail with
-				 * EntityNotFoundException! ps = con.prepareStatement(
-				 * "delete from CREDITCARD where ID = ?" ); ps.setLong(1, SOME_CREDIT_CARD_ID);
-				 * ps.executeUpdate(); ps = con.prepareStatement(
-				 * "delete from BILLINGDETAILS where ID = ?" ); ps.setLong(1,
-				 * SOME_CREDIT_CARD_ID); ps.executeUpdate();
-				 */
-
-				// Update the bank account
-				ps = con.prepareStatement("update BILLINGDETAILS set OWNER = ? where USER_ID = ?");
-				ps.setString(1, "Doe John");
-				ps.setLong(2, SOME_USER_ID);
-				ps.executeUpdate();
-			});
-
-			em1.getTransaction().commit();
-			em1.close();
-
-			return null;
-		}).get();
-
-		/*
-		 * When you <code>refresh()</code> the managed <code>User</code> instance,
-		 * Hibernate cascades the operation to the managed <code>BillingDetails</code>
-		 * and refreshes each with a SQL <code>SELECT</code>. If one of these instances
-		 * is no longer in the database, Hibernate throws an
-		 * <code>EntityNotFoundException</code>. Then, Hibernate refreshes the
-		 * <code>User</code> instance and eagerly loads the whole
-		 * <code>billingDetails</code> collection to discover any new
-		 * <code>BillingDetails</code>.
-		 */
-		em.refresh(user);
-		// select * from CREDITCARD join BILLINGDETAILS where ID = ?
-		// select * from BANKACCOUNT join BILLINGDETAILS where ID = ?
-		// select * from USERS
-		// left outer join BILLINGDETAILS
-		// left outer join CREDITCARD
-		// left outer JOIN BANKACCOUNT
-		// where ID = ?
-
-		for (BillingDetails bd : user.getBillingDetails()) {
-			assertEquals("Doe John", bd.getOwner());
-		}
-
-		em.getTransaction().commit();
-		em.close();
-
-	}
+//	@Test
+//	public void refresh() throws Throwable {
+//		EntityManager em = emf.createEntityManager();
+//		em.getTransaction().begin();
+//
+//		Long USER_ID;
+//		Long CREDIT_CARD_ID = null;
+//		{
+//
+//			User user = new User("johndoe");
+//			user.addBillingDetails(new CreditCard("John Doe", "1234567890", "11", "2020"));
+//			user.addBillingDetails(new BankAccount("John Doe", "45678", "Some Bank", "1234"));
+//			em.persist(user);
+//			em.flush();
+//
+//			USER_ID = user.getId();
+//			for (BillingDetails bd : user.getBillingDetails()) {
+//				if (bd instanceof CreditCard)
+//					CREDIT_CARD_ID = bd.getId();
+//			}
+//			assertNotNull(CREDIT_CARD_ID);
+//		}
+//		em.getTransaction().commit();
+//		em.close();
+//		// Locks from INSERTs must be released, commit and start a new unit of work
+//
+//		em = emf.createEntityManager();
+//		em.getTransaction().begin();
+//
+//		/*
+//		 * An instance of <code>User</code> is loaded from the database.
+//		 */
+//		User user = em.find(User.class, USER_ID);
+//
+//		/*
+//		 * Its lazy <code>billingDetails</code> collection is initialized when you
+//		 * iterate through the elements or when you call <code>size()</code>.
+//		 */
+//		assertEquals(2, user.getBillingDetails().size());
+//		for (BillingDetails bd : user.getBillingDetails()) {
+//			assertEquals("John Doe", bd.getOwner());
+//		}
+//
+//		// Someone modifies the billing information in the database!
+//		Long SOME_USER_ID = USER_ID;
+//		// In a separate transaction, so no locks are held in the database on the
+//		// updated/deleted rows and we can SELECT them again in the original transaction
+//		Executors.newSingleThreadExecutor().submit(() -> {
+//
+//			EntityManager em1 = emf.createEntityManager();
+//			em1.getTransaction().begin();
+//
+//			em1.unwrap(Session.class).doWork(con -> {
+//				PreparedStatement ps;
+//
+//				/*
+//				 * Delete the credit card, this will cause the refresh to fail with
+//				 * EntityNotFoundException! ps = con.prepareStatement(
+//				 * "delete from CREDITCARD where ID = ?" ); ps.setLong(1, SOME_CREDIT_CARD_ID);
+//				 * ps.executeUpdate(); ps = con.prepareStatement(
+//				 * "delete from BILLINGDETAILS where ID = ?" ); ps.setLong(1,
+//				 * SOME_CREDIT_CARD_ID); ps.executeUpdate();
+//				 */
+//
+//				// Update the bank account
+//				ps = con.prepareStatement("update BILLINGDETAILS set OWNER = ? where USER_ID = ?");
+//				ps.setString(1, "Doe John");
+//				ps.setLong(2, SOME_USER_ID);
+//				ps.executeUpdate();
+//			});
+//
+//			em1.getTransaction().commit();
+//			em1.close();
+//
+//			return null;
+//		}).get();
+//
+//		/*
+//		 * When you <code>refresh()</code> the managed <code>User</code> instance,
+//		 * Hibernate cascades the operation to the managed <code>BillingDetails</code>
+//		 * and refreshes each with a SQL <code>SELECT</code>. If one of these instances
+//		 * is no longer in the database, Hibernate throws an
+//		 * <code>EntityNotFoundException</code>. Then, Hibernate refreshes the
+//		 * <code>User</code> instance and eagerly loads the whole
+//		 * <code>billingDetails</code> collection to discover any new
+//		 * <code>BillingDetails</code>.
+//		 */
+//		em.refresh(user);
+//		// select * from CREDITCARD join BILLINGDETAILS where ID = ?
+//		// select * from BANKACCOUNT join BILLINGDETAILS where ID = ?
+//		// select * from USERS
+//		// left outer join BILLINGDETAILS
+//		// left outer join CREDITCARD
+//		// left outer JOIN BANKACCOUNT
+//		// where ID = ?
+//
+//		for (BillingDetails bd : user.getBillingDetails()) {
+//			assertEquals("Doe John", bd.getOwner());
+//		}
+//
+//		em.getTransaction().commit();
+//		em.close();
+//
+//	}
 
 	@Test
 	public void replicate() {

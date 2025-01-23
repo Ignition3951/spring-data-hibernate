@@ -1,21 +1,17 @@
 package com.utk.entity;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.ExcludeDefaultListeners;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.envers.Audited;
+
 @Entity
 @Table(name = "USERS")
-@ExcludeDefaultListeners
+//@ExcludeDefaultListeners
+@Audited
 public class User {
 
 	@Id
@@ -25,9 +21,9 @@ public class User {
 	@NotNull
 	private String username;
 
-	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
-	@JoinColumn(name = "USER_ID", nullable = false)
-	private Set<BillingDetails> billingDetails = new HashSet<>();
+//	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.REFRESH })
+//	@JoinColumn(name = "USER_ID", nullable = false)
+//	private Set<BillingDetails> billingDetails = new HashSet<>();
 
 	public User() {
 	}
@@ -44,17 +40,17 @@ public class User {
 		this.username = username;
 	}
 
-	public Set<BillingDetails> getBillingDetails() {
-		return billingDetails;
-	}
-
-	public void setBillingDetails(Set<BillingDetails> billingDetails) {
-		this.billingDetails = billingDetails;
-	}
-
-	public void addBillingDetails(BillingDetails billingDetails) {
-		this.billingDetails.add(billingDetails);
-	}
+//	public Set<BillingDetails> getBillingDetails() {
+//		return billingDetails;
+//	}
+//
+//	public void setBillingDetails(Set<BillingDetails> billingDetails) {
+//		this.billingDetails = billingDetails;
+//	}
+//
+//	public void addBillingDetails(BillingDetails billingDetails) {
+//		this.billingDetails.add(billingDetails);
+//	}
 
 	public Long getId() {
 		return id;
