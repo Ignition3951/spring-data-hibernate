@@ -24,6 +24,11 @@ import com.utk.interceptor.Auditable;
 //@EntityListeners(PersistEntityListener.class)
 //@ExcludeDefaultListeners
 @Audited
+@org.hibernate.annotations.Filter(name = "limitByUserRanking", condition = """
+		:currentUserRanking >= (
+		        select u.RANKING from USERS u
+		        where u.ID = SELLER_ID
+		    )""")
 public class Item implements Auditable {
 
 	@Id
@@ -32,6 +37,11 @@ public class Item implements Auditable {
 
 	@NotNull
 	private String name;
+
+	@NotNull
+	@ManyToOne(fetch = FetchType.LAZY)
+	@NotAudited
+	private Category category;
 
 	@OneToMany(mappedBy = "item", cascade = { javax.persistence.CascadeType.DETACH,
 			javax.persistence.CascadeType.MERGE })
@@ -52,8 +62,13 @@ public class Item implements Auditable {
 	}
 
 	public Item(@NotNull String name) {
-		super();
 		this.name = name;
+	}
+
+	public Item(@NotNull String name, @NotNull Category category, User seller) {
+		this.name = name;
+		this.category = category;
+		this.seller = seller;
 	}
 
 	public String getName() {
