@@ -15,10 +15,11 @@ import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import com.utk.dao.BidDao;
-import com.utk.dao.ItemDao;
+import com.utk.dao.GenericDao;
 import com.utk.dao.impl.BidDaoImpl;
 import com.utk.dao.impl.ItemDaoImpl;
+import com.utk.entity.Bid;
+import com.utk.entity.Item;
 import com.utk.service.DatabaseService;
 
 @Configuration
@@ -66,12 +67,12 @@ public class SpringConfiguration {
 	}
 
 	@Bean
-	public ItemDao itemDao() {
+	public GenericDao<Item> itemDao() {
 		return new ItemDaoImpl();
 	}
 
 	@Bean
-	public BidDao bidDao() {
+	public GenericDao<Bid> bidDao() {
 		return new BidDaoImpl();
 	}
 

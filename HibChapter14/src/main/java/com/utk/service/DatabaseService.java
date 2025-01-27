@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.utk.dao.ItemDao;
+import com.utk.dao.GenericDao;
 import com.utk.entity.Bid;
 import com.utk.entity.Item;
 
@@ -19,7 +19,7 @@ public class DatabaseService {
 	private EntityManager entityManager;
 
 	@Autowired
-	private ItemDao itemDao;
+	private GenericDao<Item> itemDao;
 
 	@Transactional
 	public void init() {
