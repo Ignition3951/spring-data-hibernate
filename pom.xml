@@ -65,5 +65,6 @@
 		<module>HibChapter12</module>
 		<module>HIbChapter13</module>
 		<module>HibChapter14</module>
+		<module>HibChapter16</module>
 	</modules>
 </project>
