@@ -1,5 +1,6 @@
 package com.utk.dao.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -54,6 +55,11 @@ public class AbstractGenericDao<T> implements GenericDao<T> {
 				.createQuery("select e from " + clazz.getName() + " e where e." + propertyName + "=:propertyValue",
 						clazz)
 				.setParameter("propertyValue", propertyValue).getResultList();
+	}
+
+	@Override
+	public BigDecimal sumOfAmount() {
+		return (BigDecimal) entityManager.createQuery("select sum(amount) from Bid").getSingleResult();
 	}
 
 }

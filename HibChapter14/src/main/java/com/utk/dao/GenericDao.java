@@ -1,5 +1,6 @@
 package com.utk.dao;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface GenericDao<T> {
@@ -15,5 +16,7 @@ public interface GenericDao<T> {
 	void update(Long id, String propertyName, Object propertyValue);
 
 	List<T> findByProperty(String propertyName, Object propertyValue);
+
+	BigDecimal sumOfAmount();
 
 }
